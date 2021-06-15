@@ -1,27 +1,44 @@
 import requests
 from bs4 import BeautifulSoup
+import smtplib
+from email.message import EmailMessage
 
-url="https://www.besoccer.com/livescore/2021-05-20"
+url="https://www.besoccer.com/livescore/2021-06-14"
 
 
 page=requests.get(url)
 
 soup=BeautifulSoup(page.content,'html.parser')
-all=[]
-
+h=[]
 results=soup.findAll('a',class_='match-link')
 texs=""
-
+print('\n')
+k=""
 for a in results:
+    all=[]
     for div in a.children:
         try:
-            texs=div.text
-            all.append(" ".join(texs.split()).replace('\n','').replace('EndFull time','').replace('End Group D. MD 5','').replace('DAZN,ESPN',''))
-            print(all)
-            print('\n')
-            print('\n')
+            if 'info-head' not in div['class'] and 'date-transform' not in div['class']:
+                texs=div.text
+                all.append(" ".join(texs.split()).replace('\n',''))
         except:
             pass
 
+    h.append(all)        
 
-print(all)
+for i in h:
+    k+=str(i)
+    k=k.replace('[','').replace(']','')
+    k+="\n"
+
+print(k)
+
+msg=EmailMessage()
+msg.set_content(k)
+
+
+s=smtplib.SMTP('smtp.mail.yahoo.com',587)
+s.starttls()
+s.login('anthony.mota5','avhelxpbtdsfkfem')
+s.sendmail('anthony.mota5@yahoo.com',"anthony.mota5@yahoo.com",str(msg))
+s.quit()
