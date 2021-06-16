@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import smtplib
 from email.message import EmailMessage
 
-url="https://www.besoccer.com/livescore/2021-06-14"
+url="https://www.besoccer.com/livescore"
 
 
 page=requests.get(url)
